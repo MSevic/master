@@ -1,0 +1,19 @@
+{
+  "name": "Broker",
+  "version": "1.0.0",
+  "description": "Node.js Broker",
+  "author": "Mihailo Sevic",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^4.16.1",
+    "socket.io": "^2.2.0",
+    "nodemon": "^1.18.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.7"
+  }
+}
