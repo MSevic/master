@@ -2,6 +2,7 @@ FROM node:14
 RUN npm install -g nodemon
 RUN npm install express
 RUN npm install socket.io
+RUN npm install got
 # Create app directory
 WORKDIR /usr/src/app
 
