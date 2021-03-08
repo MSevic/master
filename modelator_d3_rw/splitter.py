@@ -1,0 +1,21 @@
+from sklearn.model_selection import train_test_split
+
+
+def splitter(df, target_column, test_size):
+    X_train, X_test, y_train, y_test = train_test_split(df, target_column, test_size=test_size, random_state=123)
+    return X_train, X_test, y_train, y_test
+
+def splitter_rolling(df, frame_size, start_index, target_column):
+    start_index = start_index - frame - 1
+    end_index = start_index + frame_size
+    columns = df.columns.tolist()
+    columns = [c for c in columns if c not in [target_column]]
+
+    x = df[columns]
+    y = df[target_column]
+
+    # Delimo podatke na train i test set
+    x_test = x.iloc[[end_index + 1]]
+    x_train = x.iloc[[start_index, end_index]]
+    y_train = y.iloc[[start_index, end_index]]
+    return x_train, y_train, x_test
