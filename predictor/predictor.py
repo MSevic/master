@@ -106,3 +106,10 @@ def make_predictions():
             date_of_prediction = date_of_prediction + timedelta(days=1)
 
         update_row(commodity, i, data, today)
+
+
+def get_prediction_for(commodity):
+    sql = "SELECT * FROM " + commodity + " ORDER BY Date_entry DESC LIMIT 30"
+    mycursor = mydb.cursor()
+    mycursor.execute(sql)
+    return mycursor.fetchone()

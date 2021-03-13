@@ -4,10 +4,10 @@ import atexit
 
 from flask import Flask, jsonify
 from apscheduler.schedulers.background import BackgroundScheduler
+from dataron import initDatabase
+from predictor import make_predictions, get_prediction_for
 
-def print_date_time():
-    print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
-
+initDatabase()
 
 scheduler = BackgroundScheduler()
 # comment for production
@@ -31,9 +31,9 @@ def welcome():
 
 @app.route('/predictions/<commodity>', methods=['GET'])
 def get_latest_prediction(commodity):
-    if not commodity:
+    if commodity not in ['GLD']:
         return jsonify({'avalable predictions': ['GLD']})
-    get_prediction_for(commodity)
+    return jsonify(get_prediction_for(commodity))
 
 if __name__ == '__main__':
     # define the localhost ip and the port that is going to be used
