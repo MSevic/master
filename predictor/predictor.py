@@ -1,35 +1,34 @@
 import pandas as pd
 import yfinance as yf
 from datetime import date
-import mysql.connector
+from sqlalchemy import create_engine
+import requests
 
-mydb = mysql.connector.connect(
-  host="localhost",
-  user="yourusername",
-  password="yourpassword",
-  database="mydatabase"
-)
-
-def update_table():
-    get_data()
+conn = create_engine('mysql+pymysql://username:password@database:3306/predictor')
 
 
 def get_table_data(table, last_n_records):
+    sql = "SELECT Date_entry, C_7, D_7, cases, deaths, S_9, S_3, Volume, Low, High, Date_entry FROM " + table + " ORDER BY Date_entry DESC LIMIT " + str(
+        last_n_records)
+    df = pd.read_sql_query(sql, conn)
+    return df
 
 
 def predict(df, target_column):
     return y
 
+
 def check_last_record(table):
     last_date = False
     try:
-        mycursor = mydb.cursor()
-        mycursor.execute("SELECT DATE FROM "+table+"ORDER BY id DESC LIMIT 1")
+        mycursor = conn.cursor()
+        mycursor.execute("SELECT DATE FROM " + table + "ORDER BY id DESC LIMIT 1")
         last_date = mycursor.fetchone()
     except:
         last_date = False
 
     return last_date
+
 
 def get_covid():
     df = pd.read_csv('https://opendata.ecdc.europa.eu/covid19/casedistribution/csv')
@@ -53,6 +52,7 @@ def get_gold(from_date, to_date):
         dst['future_' + str(i)] = dst['Close'].shift(-i)
     return dst
 
+
 def get_data(from_date, to_date):
     gold = get_gold(from_date, to_date)
     covid = get_covid()
@@ -66,25 +66,31 @@ def get_data(from_date, to_date):
     df = df.reset_index(drop=True, inplace=False)
     return df
 
+
 def write_into_table(df, table):
-    mycursor = mydb.cursor()
+    mycursor = conn.cursor()
     for index, row in df.iterrows():
         has_date = mycursor.execute("SELECT Date_entry FROM " + table + "WHERE Date_entry = " + row['Date']).fetchone()
         if not has_date:
-            sql = "INSERT INTO "+TABLE+ '(Date_entry, Close, High, Low, Volume, S_3, S_9, deaths, cases, D_7, C_7) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
-            val = (row['Date'], row['Close'], row['High'], row['Low'], row['Volume'], row['S_3'], row['S_9'], row['deaths'], row['cases'], row['D_7'], row['C_7'])
+            sql = "INSERT INTO " + TABLE + '(Date_entry, Close, High, Low, Volume, S_3, S_9, deaths, cases, D_7, C_7) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+            val = (
+                row['Date'], row['Close'], row['High'], row['Low'], row['Volume'], row['S_3'], row['S_9'],
+                row['deaths'],
+                row['cases'], row['D_7'], row['C_7'])
             mycursor.execute(sql, val)
             mydb.commit()
 
-        daybefore = row['Date'] - timedelta(days = 1)
+        daybefore = row['Date'] - timedelta(days=1)
         is_updated = mycursor.execute("SELECT creal1 FROM " + table + "WHERE Date_entry = " + daybefore).fetchone()
         if not is_updated:
-            i=0
-            while i<=15:
+            i = 0
+            while i <= 15:
                 i += 1
                 daybefore = row['Date'] - timedelta(days=i)
-                mycursor.execute("Update "+table+ " SET creal"+str(i)+"="+str(row['Close'])+ " WHERE Date_entry = "+daybefore)
+                mycursor.execute("Update " + table + " SET creal" + str(i) + "=" + str(
+                    row['Close']) + " WHERE Date_entry = " + daybefore)
             mydb.commit()
+
 
 def make_predictions():
     commodities = ['GLD']
@@ -99,9 +105,12 @@ def make_predictions():
 
         i = 0
         date_of_prediction = today + timedelta(days=1)
+        window = 10
         while i <= 15:
             i += 1
+            target_column = "cpred" + str(i)
             prediction = predict(data, target_column, window)
+            enter_preditction(commodity, prediction, i)
             data = update_with_prediction(data, prediction, date_of_prediction)
             date_of_prediction = date_of_prediction + timedelta(days=1)
 

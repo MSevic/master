@@ -1,11 +1,7 @@
 import mysql.connector
+from sqlalchemy import create_engine
+mydb = create_engine('mysql+pymysql://root:password@database:3306/mysql')
 
-mydb = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="password",
-    database="mysql"
-)
 
 
 def initDatabase():

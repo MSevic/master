@@ -1,3 +1,4 @@
 flask
 apscheduler
-mysql-connector-python
+sqlalchemy
+requests
