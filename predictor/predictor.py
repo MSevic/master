@@ -14,7 +14,11 @@ def get_table_data(table, last_n_records):
     return df
 
 
-def predict(df, target_column):
+def predict(df, target_column, window):
+    url = "http://broker:8000/md3rw/rw/d3"
+    params = {'train.csv': df.to_csv(),
+              'frame_size': window}
+
     return y
 
 
@@ -97,6 +101,9 @@ def make_predictions():
     today = date.today()
     for commodity in commodities:
         fromdate = check_last_record(commodity)
+        maxfromdate = today + timedelta(days=40)
+        if fromdate < maxfromdate:
+            fromdate = maxfromdate
         if fromdate == False | fromdate < today:
             df = get_data(fromdate, today)
             write_into_table(df, commodity)

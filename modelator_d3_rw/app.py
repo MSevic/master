@@ -36,6 +36,8 @@ def rw(model=False):
             frame_size = 10
     else:
         test_size = request.form['test_size']
+
+    target_column =
     return modelator(model, split, rolling_window, train, test, target_column, frame_size, test_size)
 
 
