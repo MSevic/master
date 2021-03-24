@@ -1,4 +1,5 @@
 flask
 apscheduler
-sqlalchemy
+pandas
+yfinance
 requests

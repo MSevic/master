@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from modelator import modelator
 
 app = Flask(__name__)
@@ -31,13 +31,14 @@ def rw(model=False):
     frame_size = 10
     test_size = 0.8
     if rolling_window:
-        frame_size = request.form['frame_size']
+        frame_size = int(request.form['frame_size'])
         if frame_size < 3:
             frame_size = 10
     else:
         test_size = request.form['test_size']
 
-    target_column =
+    target_column = request.form['target_column']
+
     return modelator(model, split, rolling_window, train, test, target_column, frame_size, test_size)
 
 

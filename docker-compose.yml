@@ -30,7 +30,7 @@ services:
       PORT: 5000
       FLASK_DEBUG: 1
     depends_on:
-      - database
+      - modelator_d3_rw
   modelator_d3_rw:
     build:
       context: ./modelator_d3_rw
@@ -42,25 +42,3 @@ services:
     environment:
       PORT: 6001
       FLASK_DEBUG: 1
-  database:
-    image: mysql:5.7
-      restart: always
-      environment:
-        MYSQL_DATABASE: 'predictor'
-        # So you don't have to use root, but you can if you like
-        MYSQL_USER: 'username'
-        # You can use whatever password you like
-        MYSQL_PASSWORD: 'password'
-        # Password for root access
-        MYSQL_ROOT_PASSWORD: 'password'
-      ports:
-        # <Port exposed> : < MySQL Port running inside container>
-        - '3306:3306'
-      expose:
-        # Opens port 3306 on the container
-        - '3306'
-        # Where our data will be persisted
-      volumes:
-        - my-db:/var/lib/mysql
-volumes:
-  my-db:
