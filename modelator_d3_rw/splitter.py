@@ -12,11 +12,12 @@ def splitter(df, target_column, test_size):
     return X_train, X_test, y_train, y_test
 
 
-def splitter_rolling(df, frame_size, start_index, target_column, exclude_column):
+def splitter_rolling(df, frame_size, start_index, target_column, exclude_columns):
     start_index = start_index - frame_size - 1
     end_index = start_index + frame_size
     columns = df.columns.tolist()
-    columns = [c for c in columns if c not in [target_column, exclude_column]]
+    excludeArray =  [target_column] + exclude_columns
+    columns = [c for c in columns if c not in excludeArray]
 
     x = df[columns]
     y = df[target_column]

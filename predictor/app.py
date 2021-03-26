@@ -11,7 +11,7 @@ vars.init()
 
 scheduler = BackgroundScheduler()
 # comment for production
-scheduler.add_job(func=update_predictions, trigger="interval", seconds=10)
+scheduler.add_job(func=update_predictions, trigger="interval", seconds=120)
 # uncomment for production
 # scheduler.add_job(func=make_predictions, trigger="cron", hour="4")
 scheduler.start()
@@ -28,11 +28,12 @@ def welcome():
     return jsonify({'status': 'predictor working'})
 
 
-@app.route('/predictions/<commodity>', methods=['GET'])
-def get_latest_prediction(commodity):
+@app.route('/predictions/<commodity>/<rows>', methods=['GET'])
+def get_latest_prediction(commodity, rows = 0):
     if commodity not in ['GLD']:
         return jsonify({'avalable predictions': ['GLD']})
-    return get_prediction_for(commodity)
+
+    return get_prediction_for(commodity, rows)
 
 
 if __name__ == '__main__':
