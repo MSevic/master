@@ -11,7 +11,7 @@ vars.init()
 
 scheduler = BackgroundScheduler()
 # comment for production
-scheduler.add_job(func=update_predictions, trigger="interval", seconds=120)
+scheduler.add_job(func=update_predictions, trigger="interval", hours=0.5)
 # uncomment for production
 # scheduler.add_job(func=make_predictions, trigger="cron", hour="4")
 scheduler.start()

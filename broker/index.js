@@ -5,17 +5,14 @@ var io = require('socket.io')(http);
 var frontend = require('./sevices/forntend/service')
 var predictor = require('./sevices/predictor/service')
 var md3rw = require('./sevices/modelator_d3_rw/service')
-// console.log(__dirname);
-// app.use(express.static('../Frontend'));
-app.get('/', function (req, res) {
-    frontend(res); // res.sendFile(path.join(__dirname, '../Frontend', 'index.html'));
-});
+
+frontend(app)
+
+md3rw(app)
 app.get('/md3rw', function (req, res) {
     md3rw(res)
 });
-app.get('/predictor', function (req, res) {
-    predictor(res)
-});
+predictor(app)
 io.on('connection', function (socket) {
     console.log("New Connection")
 });

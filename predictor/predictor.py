@@ -7,8 +7,8 @@ import io
 
 
 def predict(df, target_column, window):
-    # url = "http://broker:8000/md3rw/rw/d3"
-    url = "http://modelator_d3_rw:6001/rw/d3"
+    url = "http://broker:8000/md3rw/rw/d3"
+#     url = "http://modelator_d3_rw:6001/rw/d3"
     params = {'frame_size': window,
               'target_column': target_column}
     files = {'train.csv': io.StringIO(df.to_csv())}
@@ -68,3 +68,4 @@ def get_prediction_for(commodity, rows):
 
 def update_predictions():
     vars.update()
+#     notify frontend with latest data

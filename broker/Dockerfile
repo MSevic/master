@@ -3,6 +3,7 @@ RUN npm install -g nodemon
 RUN npm install express
 RUN npm install socket.io
 RUN npm install got
+RUN npm install express-http-proxy
 # Create app directory
 WORKDIR /usr/src/app
 
