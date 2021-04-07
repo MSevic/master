@@ -37,9 +37,9 @@ def get_gold(commodity, from_date, to_date):
 
 
 def get_data(commodity, from_date, to_date):
-    gold = get_gold(commodity, from_date, to_date)
-    covid = get_covid()
-    df = pd.merge(gold, covid, how='left', on='Date').drop_duplicates()
+    df = get_gold(commodity, from_date, to_date)
+#     covid = get_covid()
+#     df = pd.merge(gold, covid, how='left', on='Date').drop_duplicates()
     df.loc[[df.tail(1).index.item()], 'c_to_guess'] = 0
     df = df.dropna()
     df['Date'] = df.index
@@ -49,7 +49,7 @@ def get_data(commodity, from_date, to_date):
 
 def make_predictions(commodity='GLD'):
     to_date = date.today().strftime("%Y-%m-%d")
-    from_date = '2010-01-01'
+    from_date = '2020-01-01'
     df = get_data(commodity, from_date, to_date)
     window = 10
     target_column = "c_to_guess"
@@ -64,7 +64,8 @@ def get_prediction_for(commodity, rows):
     rows = int(rows)
     if rows != 0:
         rsp = rsp.tail(rows)
-    return rsp.to_csv()
+#     return rsp.to_csv()
+    return rsp.to_json(orient='index')
 
 def update_predictions():
     vars.update()
