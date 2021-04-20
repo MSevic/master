@@ -1,11 +1,12 @@
 var express = require('express');
+var cors = require('cors');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var frontend = require('./sevices/forntend/service')
 var predictor = require('./sevices/predictor/service')
 var md3rw = require('./sevices/modelator_d3_rw/service')
-
+app.use(cors())
 frontend(app)
 
 md3rw(app)

@@ -4,6 +4,8 @@ RUN npm install express
 RUN npm install socket.io
 RUN npm install got
 RUN npm install express-http-proxy
+RUN npm install cors
+
 # Create app directory
 WORKDIR /usr/src/app
 
